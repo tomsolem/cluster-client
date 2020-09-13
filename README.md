@@ -34,12 +34,12 @@ Docker image to manage kubernetes cluesters.
   and update the environment variable to point to the correct configuration file.
 
     ```bash
-    docker run -it --rm -v ${PWD}:/local -v ${HOME}/dev:/src -e KUBECONFIG=/src/config.yaml -p 8200:8200 cc
+    docker run -it --rm -v ${HOME}/.ssh:/root/.ssh:ro -v ${PWD}:/local -v ${HOME}/dev:/src -e KUBECONFIG=/src/config.yaml -p 8200:8200 cc
     ```
 
 - Ports are to use for [port forwarding](https://kubernetes.io/docs/tasks/access-application-cluster/port-forward-access-application-cluster/).
 - Run multiple version of the image with alias in .zshrc config file
   
   ```bash
-    alias kt='docker run -it --rm -v ${PWD}:/local -v ${HOME}/dev:/src -e KUBECONFIG=/src/config.yaml -p 8200:8200 cc'
+    alias kt='docker run -it --rm -v ${HOME}/.ssh:/root/.ssh:ro -v ${PWD}:/local -v ${HOME}/dev:/src -e KUBECONFIG=/src/config.yaml -p 8200:8200 cc'
   ```
