@@ -1,4 +1,4 @@
-# K8s cluster client
+# Kubernetes cluster client
 
 Docker image to manage kubernetes cluesters.
 
@@ -30,9 +30,16 @@ Docker image to manage kubernetes cluesters.
     ```
 
 - Get your copy of the kubeconfig and update the path to so you mount the kubeconfig file into the correct path.
+  I.e. your local kubeconfig file is stored in `/${HOME}/dev/config.yaml`. Change the mount path to your local path
+  and update the environment variable to point to the correct configuration file.
 
     ```bash
-    docker run -it --rm -v ${PWD}:/local -v ${HOME}/dev/github/bkk-digitek/kubernetes/ace-test:/src -e KUBECONFIG=/src/kubeconfig.yaml -p 8200:8200 cc
+    docker run -it --rm -v ${PWD}:/local -v ${HOME}/dev:/src -e KUBECONFIG=/src/config.yaml -p 8200:8200 cc
     ```
 
-Ports are to use for port forwarding.
+- Ports are to use for [port forwarding](https://kubernetes.io/docs/tasks/access-application-cluster/port-forward-access-application-cluster/).
+- Run multiple version of the image with alias in .zshrc config file
+  
+  ```bash
+    alias kt='docker run -it --rm -v ${PWD}:/local -v ${HOME}/dev:/src -e KUBECONFIG=/src/config.yaml -p 8200:8200 cc'
+  ```
