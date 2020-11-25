@@ -26,7 +26,7 @@ Docker image to manage kubernetes cluesters.
 - Build the docker image
 
     ```bash
-    docker build . -t cc
+    docker build . -t ccHelm3
     ```
 
 - Get your copy of the kubeconfig and update the path to so you mount the kubeconfig file into the correct path.
@@ -34,12 +34,14 @@ Docker image to manage kubernetes cluesters.
   and update the environment variable to point to the correct configuration file.
 
     ```bash
-    docker run -it --rm -v ${HOME}/.ssh:/root/.ssh:ro -v ${PWD}:/local -v ${HOME}/dev:/src -e KUBECONFIG=/src/config.yaml -p 8200:8200 cc
+        docker run -it --rm -v "${HOME}/.ssh:/root/.ssh:ro" -v "${PWD}:/local" -v "${HOME}/dev/github/bkk-digitek/kubernetes/ace-common-01:/src" -e KUBECONFIG=/src/kubeconfig.yaml -e FLUX_FORWARD_NAMESPACE=fluxcd -p 8200:8200 -p 8080:8080 cchelm3
     ```
 
 - Ports are to use for [port forwarding](https://kubernetes.io/docs/tasks/access-application-cluster/port-forward-access-application-cluster/).
 - Run multiple version of the image with alias in .zshrc config file
   
   ```bash
-    alias kt='docker run -it --rm -v ${HOME}/.ssh:/root/.ssh:ro -v ${PWD}:/local -v ${HOME}/dev:/src -e KUBECONFIG=/src/config.yaml -p 8200:8200 cc'
+    alias kt='    docker run -it --rm -v "${HOME}/.ssh:/root/.ssh:ro" -v "${PWD}:/local" -v "${HOME}/dev/github/bkk-digitek/kubernetes/ace-common-01:/src" -e KUBECONFIG=/src/kubeconfig.yaml -e FLUX_FORWARD_NAMESPACE=fluxcd -p 8200:8200 -p 8080:8080 cchelm3'
+
+
   ```

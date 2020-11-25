@@ -25,10 +25,9 @@ RUN wget -q https://github.com/derailed/k9s/releases/download/v0.21.9/k9s_Linux_
 
 RUN wget -q https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh -O - | zsh || true
 
-RUN wget https://releases.hashicorp.com/vault/{VAULT_VERSION}/vault_{VAULT_VERSION}_linux_amd64.zip -O vault.zip 
+RUN apk add vault
 
-RUN unzip vault.zip > /usr/local/bin/vault \
-    && chmod +x /usr/local/bin/vault 
+RUN cp /usr/sbin/vault /usr/local/bin
 
 COPY .zshrc /root/.zshrc
 WORKDIR /config
