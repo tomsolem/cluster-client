@@ -52,7 +52,7 @@ as on the "server" side of the cloud. 😊
 
 ## ☭ Tools
 
-Tips and trics on using the tools
+Tips and tricks on using the tools
 
 ### Stern
 
