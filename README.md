@@ -44,14 +44,14 @@ as on the "server" side of the cloud. 😊
   and update the environment variable to point to the correct configuration file.
 
     ```bash
-        docker run -it --rm -v "${HOME}/.ssh:/root/.ssh:ro" -v "${PWD}:/local" -v "${HOME}/dev/github/bkk-digitek/kubernetes/ace-common-01:/src" -e KUBECONFIG=/src/kubeconfig.yaml -e FLUX_FORWARD_NAMESPACE=fluxcd -p 8200:8200 -p 8080:8080 clusterclient
+    docker run -it --rm -v "${HOME}/.ssh:/root/.ssh:ro" -v "${PWD}:/local" -v "${HOME}/dev/github/bkk-digitek/kubernetes/ace-common-01:/src" -e KUBECONFIG=/src/kubeconfig.yaml -e FLUX_FORWARD_NAMESPACE=fluxcd -p 8200:8200 -p 8080:8080 clusterclient
     ```
 
 - Ports are to use for [port forwarding](https://kubernetes.io/docs/tasks/access-application-cluster/port-forward-access-application-cluster/).
 - Run multiple version of the image with alias in .zshrc config file
   
   ```bash
-    alias kt='docker run -it --rm -v "${HOME}/.ssh:/root/.ssh:ro" -v "${PWD}:/local" -v "${HOME}/dev/github/bkk-digitek/kubernetes/ace-common-01:/src" -e KUBECONFIG=/src/kubeconfig.yaml -e FLUX_FORWARD_NAMESPACE=fluxcd -p 8200:8200 -p 8080:8080 clusterclient'
+  alias kt='docker run -it --rm -v "${HOME}/.ssh:/root/.ssh:ro" -v "${PWD}:/local" -v "${HOME}/dev/github/bkk-digitek/kubernetes/ace-common-01:/src" -e KUBECONFIG=/src/kubeconfig.yaml -e FLUX_FORWARD_NAMESPACE=fluxcd -p 8200:8200 -p 8080:8080 clusterclient'
   ```
 
 ## ☭ Tools
