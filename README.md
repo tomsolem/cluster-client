@@ -21,12 +21,16 @@ as on the "server" side of the cloud. 😊
 - Update version of different tools to use in your cluster in the Dockerfile:
 
     ```dockerfile
-    ENV KUBE_VERSION="v1.16.2"
-    ENV HELM_VERSION="v2.15.0"
-    ENV ISTIO_VERSION="1.5.7"
+    ENV KUBE_VERSION="v1.19.9"
+    ENV HELM_VERSION="v3.3.4"
+    ENV ISTIO_VERSION="1.8.2"
     ENV FLUXCD_VERSION="1.19.0"
     ENV K9S_VERSION="v0.21.9"
+    ENV VAULT_VERSION="1.6.0"
     ENV ARGOCD_VERSION="v1.8.3"
+    ENV YQ_VERSION="v4.6.3"
+    ENV GITHUB_CLI_VERSION="1.9.2"
+    ENV STERN_VERSION="1.11.0"
     ```
 
 - ⚙️ Build the docker image
