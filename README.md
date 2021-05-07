@@ -1,6 +1,7 @@
 # Kubernetes cluster client
 
-Docker image to manage kubernetes cluesters.
+Docker image to manage kubernetes cluesters. Run the same version on "client"
+as on the "server" side of the cloud. 😊
 
 ## Tools installed in docker image
 
@@ -9,8 +10,12 @@ Docker image to manage kubernetes cluesters.
 - [Fluxcd](https://fluxcd.io/)
 - [Istio](https://istio.io/)
 - [k9s](https://k9scli.io/)
+- [ArgoCD cli](https://github.com/argoproj/argo-cd)
+- [yq tool](https://github.com/mikefarah/yq)
+- [Github cli](https://github.com/cli/cli)
+- [Stern](https://github.com/wercker/stern)
 
-## HowTo
+## 🤷‍♂️ HowTo
 
 - Clone this repo.
 - Update version of different tools to use in your cluster in the Dockerfile:
@@ -21,12 +26,13 @@ Docker image to manage kubernetes cluesters.
     ENV ISTIO_VERSION="1.5.7"
     ENV FLUXCD_VERSION="1.19.0"
     ENV K9S_VERSION="v0.21.9"
+    ENV ARGOCD_VERSION="v1.8.3"
     ```
 
-- Build the docker image
+- ⚙️ Build the docker image
 
     ```bash
-    docker build . -t ccHelm3
+    docker build . -t clusterclient
     ```
 
 - Get your copy of the kubeconfig and update the path to so you mount the kubeconfig file into the correct path.
@@ -34,14 +40,24 @@ Docker image to manage kubernetes cluesters.
   and update the environment variable to point to the correct configuration file.
 
     ```bash
-        docker run -it --rm -v "${HOME}/.ssh:/root/.ssh:ro" -v "${PWD}:/local" -v "${HOME}/dev/github/bkk-digitek/kubernetes/ace-common-01:/src" -e KUBECONFIG=/src/kubeconfig.yaml -e FLUX_FORWARD_NAMESPACE=fluxcd -p 8200:8200 -p 8080:8080 cchelm3
+        docker run -it --rm -v "${HOME}/.ssh:/root/.ssh:ro" -v "${PWD}:/local" -v "${HOME}/dev/github/bkk-digitek/kubernetes/ace-common-01:/src" -e KUBECONFIG=/src/kubeconfig.yaml -e FLUX_FORWARD_NAMESPACE=fluxcd -p 8200:8200 -p 8080:8080 clusterclient
     ```
 
 - Ports are to use for [port forwarding](https://kubernetes.io/docs/tasks/access-application-cluster/port-forward-access-application-cluster/).
 - Run multiple version of the image with alias in .zshrc config file
   
   ```bash
-    alias kt='    docker run -it --rm -v "${HOME}/.ssh:/root/.ssh:ro" -v "${PWD}:/local" -v "${HOME}/dev/github/bkk-digitek/kubernetes/ace-common-01:/src" -e KUBECONFIG=/src/kubeconfig.yaml -e FLUX_FORWARD_NAMESPACE=fluxcd -p 8200:8200 -p 8080:8080 cchelm3'
-
-
+    alias kt='docker run -it --rm -v "${HOME}/.ssh:/root/.ssh:ro" -v "${PWD}:/local" -v "${HOME}/dev/github/bkk-digitek/kubernetes/ace-common-01:/src" -e KUBECONFIG=/src/kubeconfig.yaml -e FLUX_FORWARD_NAMESPACE=fluxcd -p 8200:8200 -p 8080:8080 clusterclient'
   ```
+
+## ☭ Tools
+
+Rips and trics on using the tools
+
+### Stern
+
+Read logs from more than one pod in once:
+
+```.bash
+stern "regex" --tail=300 --container golang --namespace my-ns
+```
