@@ -1,32 +1,34 @@
-FROM alpine:3.10
+FROM alpine:3.18
 
-ENV KUBE_VERSION="v1.19.9"
-ENV HELM_VERSION="v3.3.4"
-ENV ISTIO_VERSION="1.8.2"
-ENV FLUXCD_VERSION="1.19.0"
-ENV K9S_VERSION="v0.21.9"
-ENV VAULT_VERSION="1.6.0"
-ENV ARGOCD_VERSION="v1.8.3"
-ENV YQ_VERSION="v4.6.3"
-ENV GITHUB_CLI_VERSION="1.9.2"
-ENV STERN_VERSION="1.11.0"
+ENV KUBE_VERSION="v1.27.7"
+# https://github.com/helm/helm/releases
+ENV HELM_VERSION="v3.14.0" 
+# https://github.com/fluxcd/flux2/releases
+ENV FLUXCD_VERSION="0.41.2"
+# https://github.com/derailed/k9s/releases
+ENV K9S_VERSION="v0.31.7"
+# https://github.com/mikefarah/yq/releases
+ENV YQ_VERSION="v4.40.5"
+# https://github.com/cli/cli/releases
+ENV GITHUB_CLI_VERSION="2.42.1"
+# https://github.com/stern/stern/releases
+ENV STERN_VERSION="1.28.0"
+# https://github.com/hashicorp/terraform/releases
+ENV TERRAFORM_VERSION="1.7.1"
 
-RUN apk add --no-cache ca-certificates bash git openssh curl zsh vim jq \
-    && wget -q https://storage.googleapis.com/kubernetes-release/release/${KUBE_VERSION}/bin/linux/amd64/kubectl -O /usr/local/bin/kubectl \
+RUN apk add --no-cache ca-certificates bash git openssh curl zsh vim jq python3 py3-pip gcc musl-dev python3-dev libffi-dev openssl-dev cargo make 
+RUN ln -sf python3 /usr/bin/python
+RUN python3 -m ensurepip
+# RUN pip install --upgrade pip
+RUN pip install azure-cli
+
+RUN wget -q https://storage.googleapis.com/kubernetes-release/release/${KUBE_VERSION}/bin/linux/amd64/kubectl -O /usr/local/bin/kubectl \
     && chmod +x /usr/local/bin/kubectl \
     && wget -q https://get.helm.sh/helm-${HELM_VERSION}-linux-amd64.tar.gz -O - | tar -xzO linux-amd64/helm > /usr/local/bin/helm \
     && chmod +x /usr/local/bin/helm 
-
-RUN wget -q https://github.com/istio/istio/releases/download/${ISTIO_VERSION}/istio-${ISTIO_VERSION}-linux-amd64.tar.gz -O - | tar -xzO istio-${ISTIO_VERSION}/bin/istioctl > /usr/local/bin/istioctl \
-    && chmod +x /usr/local/bin/istioctl 
-
-RUN wget -q https://github.com/fluxcd/flux/releases/download/${FLUXCD_VERSION}/fluxctl_linux_amd64 -O fluxctl \
-    && cp fluxctl /usr/local/bin/ \
-    && chmod +x /usr/local/bin/fluxctl 
-
-RUN wget -q https://github.com/argoproj/argo-cd/releases/download/${ARGOCD_VERSION}/argocd-linux-amd64 -O argocd \
-    && cp argocd /usr/local/bin/ \
-    && chmod +x /usr/local/bin/argocd
+# wget -q https://github.com/fluxcd/flux2/releases/download/v2.1.2/flux_2.1.2_darwin_amd64.tar.gz -O - | tar -xz flux > /usr/local/bin/flux \
+RUN wget -q https://github.com/fluxcd/flux2/releases/download/v${FLUXCD_VERSION}/flux_${FLUXCD_VERSION}_linux_amd64.tar.gz -O  - | tar -xzO flux > /usr/local/bin/flux \
+    && chmod +x /usr/local/bin/flux
 
 RUN wget https://github.com/mikefarah/yq/releases/download/${YQ_VERSION}/yq_linux_amd64 -O /usr/local/bin/yq &&\
     chmod +x /usr/local/bin/yq
@@ -34,16 +36,19 @@ RUN wget https://github.com/mikefarah/yq/releases/download/${YQ_VERSION}/yq_linu
 RUN wget -q https://github.com/derailed/k9s/releases/download/v0.24.6/k9s_Linux_x86_64.tar.gz -O - | tar -xzO k9s > /usr/local/bin/k9s \
     && chmod +x /usr/local/bin/k9s
 
-RUN wget -q https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh -O - | zsh || true
+# RUN wget -q https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh -O - | zsh || true
+# Uses "robbyrussell" theme (original Oh My Zsh theme), with no plugins
+RUN sh -c "$(wget -O- https://github.com/deluan/zsh-in-docker/releases/download/v1.1.5/zsh-in-docker.sh)" -- \
+    -t robbyrussell
 
 RUN wget -q https://github.com/cli/cli/releases/download/v${GITHUB_CLI_VERSION}/gh_${GITHUB_CLI_VERSION}_linux_amd64.tar.gz -O gh_${GITHUB_CLI_VERSION}_linux_amd64.tar.gz
 RUN tar xvf gh_${GITHUB_CLI_VERSION}_linux_amd64.tar.gz
 RUN cp gh_${GITHUB_CLI_VERSION}_linux_amd64/bin/gh /usr/local/bin/
 
-RUN wget -q https://github.com/wercker/stern/releases/download/${STERN_VERSION}/stern_linux_amd64  -O stern_linux_amd64
-RUN chmod +x stern_linux_amd64
-RUN mv stern_linux_amd64 /usr/local/bin/stern
-
+RUN wget https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip
+RUN unzip terraform_${TERRAFORM_VERSION}_linux_amd64.zip
+RUN chmod +x terraform
+RUN mv terraform /usr/local/bin/terraform
 
 RUN apk add vault
 

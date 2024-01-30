@@ -1,0 +1,49 @@
+FROM alpine:3.17
+
+ENV KUBE_VERSION="v1.19.9"
+ENV HELM_VERSION="v3.3.4"
+ENV K9S_VERSION="v0.21.9"
+ENV VAULT_VERSION="1.6.0"
+ENV YQ_VERSION="v4.6.3"
+ENV GITHUB_CLI_VERSION="2.9.0"
+ENV STERN_VERSION="1.22.0"
+ENV FLUX_VERSION="0.19.1"
+ENV LINKERD_VERSION="22.3.5"
+
+RUN apk add --no-cache ca-certificates bash git openssh openssl curl zsh vim jq \
+    && wget -q https://storage.googleapis.com/kubernetes-release/release/${KUBE_VERSION}/bin/linux/amd64/kubectl -O /usr/local/bin/kubectl \
+    && chmod +x /usr/local/bin/kubectl \
+    && wget -q https://get.helm.sh/helm-${HELM_VERSION}-linux-amd64.tar.gz -O - | tar -xzO linux-amd64/helm > /usr/local/bin/helm \
+    && chmod +x /usr/local/bin/helm 
+
+RUN curl https://fluxcd.io/install.sh | bash
+
+RUN wget https://github.com/linkerd/linkerd2/releases/download/edge-${LINKERD_VERSION}/linkerd2-cli-edge-${LINKERD_VERSION}-linux-amd64 \
+    && mv linkerd2-cli-edge-${LINKERD_VERSION}-linux-amd64 /usr/local/bin/linkerd \
+    && chmod +x /usr/local/bin/linkerd
+
+RUN wget https://github.com/mikefarah/yq/releases/download/${YQ_VERSION}/yq_linux_amd64 -O /usr/local/bin/yq &&\
+    chmod +x /usr/local/bin/yq
+
+RUN wget -q https://github.com/derailed/k9s/releases/download/v0.24.6/k9s_Linux_x86_64.tar.gz -O - | tar -xzO k9s > /usr/local/bin/k9s \
+    && chmod +x /usr/local/bin/k9s
+
+RUN wget -q https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh -O - | zsh || true
+
+RUN wget -q https://github.com/cli/cli/releases/download/v${GITHUB_CLI_VERSION}/gh_${GITHUB_CLI_VERSION}_linux_amd64.tar.gz -O gh_${GITHUB_CLI_VERSION}_linux_amd64.tar.gz
+RUN tar xvf gh_${GITHUB_CLI_VERSION}_linux_amd64.tar.gz
+RUN cp gh_${GITHUB_CLI_VERSION}_linux_amd64/bin/gh /usr/local/bin/
+
+RUN wget -q https://github.com/stern/stern/releases/download/v${STERN_VERSION}/stern_${STERN_VERSION}_linux_amd64.tar.gz  -O ${STERN_VERSION}_stern_linux_amd64.tar.gz
+RUN tar xvf ${STERN_VERSION}_stern_linux_amd64.tar.gz
+
+RUN mv stern /usr/local/bin/stern
+
+RUN apk add vault
+
+RUN cp /usr/sbin/vault /usr/local/bin
+
+COPY .zshrc /root/.zshrc
+WORKDIR /config
+
+CMD ["zsh"]

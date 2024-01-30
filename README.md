@@ -65,3 +65,9 @@ Read logs from more than one pod in once:
 ```.bash
 stern "regex" --tail=300 --container golang --namespace my-ns
 ```
+
+### k9s
+
+run k9s and get a nice view of you cluster.
+
+TODO: se az-pipeline-container to push to docker hub
